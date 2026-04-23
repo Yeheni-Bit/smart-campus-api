@@ -4,6 +4,7 @@
  */
 package com.smartcampus.resource;
 
+import com.smartcampus.exception.LinkedResourceNotFoundException;
 import com.smartcampus.model.Room;
 import com.smartcampus.model.Sensor;
 import com.smartcampus.repository.DataStore;
@@ -15,6 +16,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -51,9 +53,7 @@ public class SensorResource {
 
         Room room = DataStore.rooms.get(sensor.getRoomId());
         if (room == null) {
-            return Response.status(422)
-                    .entity("Referenced room does not exist")
-                    .build();
+            throw new LinkedResourceNotFoundException("Referenced room does not exist");
         }
 
         DataStore.sensors.put(sensor.getId(), sensor);
@@ -76,9 +76,15 @@ public class SensorResource {
         }
 
         List<Sensor> filtered = allSensors.stream()
-                .filter(sensor -> sensor.getType() != null && sensor.getType().equalsIgnoreCase(type))
+                .filter(sensor -> sensor.getType() != null
+                        && sensor.getType().equalsIgnoreCase(type))
                 .collect(Collectors.toList());
 
         return Response.ok(filtered).build();
+    }
+
+    @Path("/{sensorId}/readings")
+    public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
+        return new SensorReadingResource(sensorId);
     }
 }

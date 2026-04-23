@@ -1,10 +1,12 @@
 package com.smartcampus.resource;
 
+import com.smartcampus.exception.RoomNotEmptyException;
 import com.smartcampus.model.Room;
 import com.smartcampus.repository.DataStore;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,7 +14,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.DELETE;
 
 @Path("/rooms")
 @Produces(MediaType.APPLICATION_JSON)
@@ -62,28 +63,24 @@ public class RoomResource {
 
         return Response.ok(room).build();
     }
-    
+
     @DELETE
-@Path("/{roomId}")
-public Response deleteRoom(@PathParam("roomId") String roomId) {
-    Room room = DataStore.rooms.get(roomId);
+    @Path("/{roomId}")
+    public Response deleteRoom(@PathParam("roomId") String roomId) {
+        Room room = DataStore.rooms.get(roomId);
 
-    // If room doesn't exist
-    if (room == null) {
-        return Response.status(Response.Status.NOT_FOUND)
-                .entity("Room not found")
-                .build();
+        if (room == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Room not found")
+                    .build();
+        }
+
+        if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
+            throw new RoomNotEmptyException("Cannot delete room with assigned sensors");
+        }
+
+        DataStore.rooms.remove(roomId);
+
+        return Response.noContent().build();
     }
-
-    // Rule: cannot delete if sensors exist
-    if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
-        return Response.status(Response.Status.CONFLICT)
-                .entity("Cannot delete room with assigned sensors")
-                .build();
-    }
-
-    DataStore.rooms.remove(roomId);
-
-    return Response.noContent().build();
-}
 }

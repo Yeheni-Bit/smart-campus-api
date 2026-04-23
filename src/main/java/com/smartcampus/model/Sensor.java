@@ -4,6 +4,9 @@
  */
 package com.smartcampus.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author HP
@@ -14,6 +17,7 @@ public class Sensor {
     private String status;
     private double currentValue;
     private String roomId;
+    private List<SensorReading> readings = new ArrayList<>();
 
     public Sensor() {
     }
@@ -24,6 +28,7 @@ public class Sensor {
         this.status = status;
         this.currentValue = currentValue;
         this.roomId = roomId;
+        this.readings = new ArrayList<>();
     }
 
     public String getId() {
@@ -64,5 +69,13 @@ public class Sensor {
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public List<SensorReading> getReadings() {
+        return readings;
+    }
+
+    public void setReadings(List<SensorReading> readings) {
+        this.readings = readings;
     }
 }

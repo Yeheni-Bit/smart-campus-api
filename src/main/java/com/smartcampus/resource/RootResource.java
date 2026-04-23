@@ -15,9 +15,9 @@ public class RootResource {
     public Map<String, Object> getApiInfo() {
         Map<String, Object> response = new HashMap<>();
 
-        response.put("name", "Smart Campus API");
+        response.put("Yeheni Alwis", "Smart Campus API");
         response.put("version", "v1");
-        response.put("contact", "yourname@westminster.ac.uk");
+        response.put("contact", "YeheniAlwis@westminster.ac.uk");
 
         Map<String, String> resources = new HashMap<>();
         resources.put("rooms", "/api/v1/rooms");

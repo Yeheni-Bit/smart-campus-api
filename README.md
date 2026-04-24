@@ -1,5 +1,11 @@
 # Smart Campus API
 
+GitHub Repository:
+https://github.com/Yeheni-Bit/smart-campus-api
+
+Video Demonstration:
+https://drive.google.com/drive/folders/1hunS81HcYrA6sJXwerMVrATMOGyxuMr4?usp=sharing
+
 ## Project Structure
 smart-campus-api/
 │
